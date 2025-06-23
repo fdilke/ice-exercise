@@ -1,19 +1,20 @@
-package com.fdilke.ice.music
+package com.fdilke.ice.music.impl
 
-import com.fdilke.ice.music.domain.{Artist, Release, Song}
+import com.fdilke.ice.music.api.{MusicDistributionSystem, MusicStorageService}
+import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
 
 import java.time.LocalDate
 
-class MusicDistributionSystem(
+class PrototypeMusicDistributionSystem(
    storageService: MusicStorageService
-):
-  def storeArtist(artist: Artist): Id[Artist] =
+) extends MusicDistributionSystem:
+  override def storeArtist(artist: Artist): Id[Artist] =
     val id = 
       Id[Artist](storageService.uniqueIdString("artist"))
     storageService.storeArtist(id, artist)
     id
-    
-  def storeRelease(release: Release): Id[Release] =
+
+  override def storeRelease(release: Release): Id[Release] =
     val id = 
       Id[Release](storageService.uniqueIdString("release"))
     storageService.storeRelease(id, release)
@@ -25,7 +26,7 @@ class MusicDistributionSystem(
     storageService.storeSong(id, song)
     id
 
-  def withRelease[T](
+  override def withRelease[T](
     id: Id[Release]
   )(
     block: Release => T
@@ -47,7 +48,7 @@ class MusicDistributionSystem(
         updateFn(release)
       )
 
-  def addSongsToRelease(
+  override def addSongsToRelease(
     id: Id[Release], 
     songs: Id[Song]*
   ): Unit  =
@@ -56,7 +57,7 @@ class MusicDistributionSystem(
           songs = release.songs ++ songs
         )
 
-  def proposeReleaseDate(
+  override def proposeReleaseDate(
     id: Id[Release], 
     date: LocalDate
   ): Unit =
@@ -65,7 +66,7 @@ class MusicDistributionSystem(
         proposedReleaseDate = Some(date)
       )
 
-  def agreeReleaseDate(id: Id[Release]): Unit =
+  override def agreeReleaseDate(id: Id[Release]): Unit =
     updateRelease(id): release =>
       release.copy(
         proposedReleaseDate = None,

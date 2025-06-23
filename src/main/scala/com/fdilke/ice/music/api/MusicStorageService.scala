@@ -1,6 +1,6 @@
-package com.fdilke.ice.music
+package com.fdilke.ice.music.api
 
-import com.fdilke.ice.music.domain.{Artist, Release, Song}
+import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
 
 trait MusicStorageService:
   def uniqueIdString(prefix: String): String

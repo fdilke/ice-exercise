@@ -1,4 +1,4 @@
-package com.fdilke.ice.music
+package com.fdilke.ice.music.domain
 
 import scala.reflect.ClassTag
 

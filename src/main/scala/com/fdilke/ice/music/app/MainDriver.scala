@@ -1,9 +1,9 @@
-package com.fdilke.ice
+package com.fdilke.ice.music.app
 
-import com.fdilke.ice.MainDriver.{afternoonPicnic, teaBoys}
-import com.fdilke.ice.music.domain.{Artist, Release, Song}
-import com.fdilke.ice.music.local.LocalMusicStorageService
-import com.fdilke.ice.music.{Id, MusicDistributionSystem, MusicStorageService}
+import com.fdilke.ice.music.api.{MusicDistributionSystem, MusicStorageService}
+import com.fdilke.ice.music.app.MainDriver.{afternoonPicnic, teaBoys}
+import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
+import com.fdilke.ice.music.impl.{LocalMusicStorageService, PrototypeMusicDistributionSystem}
 
 import java.time.LocalDate
 
@@ -12,7 +12,7 @@ object MainDriver extends App:
   val storageService: MusicStorageService =
     new LocalMusicStorageService
   val mds: MusicDistributionSystem = 
-    new MusicDistributionSystem(storageService)
+    new PrototypeMusicDistributionSystem(storageService)
   println("Instantiated an MDS")
 
   val teaBoys: Id[Artist] =

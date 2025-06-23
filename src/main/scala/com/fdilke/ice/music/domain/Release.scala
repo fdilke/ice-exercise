@@ -1,7 +1,5 @@
 package com.fdilke.ice.music.domain
 
-import com.fdilke.ice.music.Id
-
 import java.time.LocalDate
 import java.util.Date
 

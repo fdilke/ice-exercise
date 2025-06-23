@@ -1,7 +1,7 @@
-package com.fdilke.ice.music.local
+package com.fdilke.ice.music.impl
 
-import com.fdilke.ice.music.domain.{Artist, Release, Song}
-import com.fdilke.ice.music.{Id, MusicStorageService}
+import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
+import com.fdilke.ice.music.api.MusicStorageService
 
 import java.util.concurrent.atomic.AtomicLong
 import scala.collection.mutable
