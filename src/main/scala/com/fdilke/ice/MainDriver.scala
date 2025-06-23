@@ -1,6 +1,6 @@
 package com.fdilke.ice
 
-import com.fdilke.ice.MainDriver.teaBoys
+import com.fdilke.ice.MainDriver.{afternoonPicnic, teaBoys}
 import com.fdilke.ice.music.domain.{Artist, Release, Song}
 import com.fdilke.ice.music.local.LocalMusicStorageService
 import com.fdilke.ice.music.{Id, MusicDistributionSystem, MusicStorageService}
@@ -34,12 +34,15 @@ object MainDriver extends App:
 
   println(s"added a release: $oneLump")
 
+  def storeNamedSong(songName: String): Id[Song] =
+    mds.storeSong:
+      Song(
+        name = songName
+      )
+
   val Seq(teacups, sugarTongs, passTheStrainer): Seq[Id[Song]] =
-    Seq("Teacups", "Sugar Tongs", "Pass The Strainer").map: songName =>
-      mds.storeSong:
-        Song(
-          name = songName
-        )
+    Seq("Teacups", "Sugar Tongs", "Pass The Strainer").map:
+      storeNamedSong
 
   mds.addSongsToRelease(oneLump, teacups, sugarTongs, passTheStrainer)
 
@@ -60,3 +63,22 @@ object MainDriver extends App:
     mds.agreeReleaseDate(oneLump)
     println(s"Agreed release date for $oneLump")
   }
+
+  val afternoonPicnic: Id[Release] =
+    mds.storeRelease:
+      Release(
+        name = "Afternoon Picnic",
+        artist = teaBoys,
+        description = "EP"
+      )
+
+  println(s"added a release: $afternoonPicnic")
+
+  val Seq(crumpets, crumpetsDisco): Seq[Id[Song]] =
+    Seq("Crumpets", "Crumpets (Disco Remix)").map:
+      storeNamedSong
+
+  mds.addSongsToRelease(oneLump, teacups, sugarTongs, passTheStrainer)
+
+  println(s"added songs $crumpets, $crumpetsDisco to $afternoonPicnic")
+
