@@ -25,7 +25,7 @@ class MusicDistributionSystem(
     storageService.storeSong(id, song)
     id
 
-  private def withRelease[T](
+  def withRelease[T](
     id: Id[Release]
   )(
     block: Release => T
@@ -64,4 +64,11 @@ class MusicDistributionSystem(
       release.copy(
         proposedReleaseDate = Some(date)
       )
-    
+
+  def agreeReleaseDate(id: Id[Release]): Unit =
+    updateRelease(id): release =>
+      release.copy(
+        proposedReleaseDate = None,
+        agreedReleaseDate = release.proposedReleaseDate
+      )
+      

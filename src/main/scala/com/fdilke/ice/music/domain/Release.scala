@@ -10,6 +10,6 @@ case class Release(
   description: String,
   artist: Id[Artist],
   proposedReleaseDate: Option[LocalDate] = None,
-  confirmedReleaseDate: Option[LocalDate] = None,
+  agreedReleaseDate: Option[LocalDate] = None,
   songs: Seq[Id[Song]] = Seq()
 )

@@ -50,3 +50,13 @@ object MainDriver extends App:
   mds.proposeReleaseDate(oneLump, proposedReleaseDate)
 
   println(s"Proposed a release date for $oneLump of $proposedReleaseDate")
+
+  {
+    mds.withRelease(oneLump): r =>
+      assert:
+        r.proposedReleaseDate.isDefined
+      assert:
+        r.proposedReleaseDate.get == proposedReleaseDate
+    mds.agreeReleaseDate(oneLump)
+    println(s"Agreed release date for $oneLump")
+  }
