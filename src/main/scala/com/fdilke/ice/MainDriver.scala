@@ -5,6 +5,8 @@ import com.fdilke.ice.music.domain.{Artist, Release, Song}
 import com.fdilke.ice.music.local.LocalMusicStorageService
 import com.fdilke.ice.music.{Id, MusicDistributionSystem, MusicStorageService}
 
+import java.time.LocalDate
+
 object MainDriver extends App:
   println("ICE exercise modelling a Music Distribution System (MDS)")
   val storageService: MusicStorageService =
@@ -42,3 +44,9 @@ object MainDriver extends App:
   mds.addSongsToRelease(oneLump, teacups, sugarTongs, passTheStrainer)
 
   println(s"added songs: $teacups, $sugarTongs, $passTheStrainer to the release")
+
+  val proposedReleaseDate: LocalDate =
+    LocalDate.of(2025, 8, 2)
+  mds.proposeReleaseDate(oneLump, proposedReleaseDate)
+
+  println(s"Proposed a release date for $oneLump of $proposedReleaseDate")
