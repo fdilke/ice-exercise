@@ -1,6 +1,6 @@
 package com.fdilke.ice.music.domain
 
-import com.fdilke.ice.music.{ArtistId, SongId}
+import com.fdilke.ice.music.Id
 
 import java.time.LocalDate
 import java.util.Date
@@ -8,8 +8,8 @@ import java.util.Date
 case class Release(
   name: String,
   description: String,
-  artist: ArtistId,
+  artist: Id[Artist],
   proposedReleaseDate: Option[LocalDate] = None,
   confirmedReleaseDate: Option[LocalDate] = None,
-  songs: Seq[SongId] = Seq()
+  songs: Seq[Id[Song]] = Seq()
 )

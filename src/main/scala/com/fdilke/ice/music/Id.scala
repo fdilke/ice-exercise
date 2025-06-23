@@ -1,11 +1,8 @@
 package com.fdilke.ice.music
 
-trait Id:
-  val key: String
+import scala.reflect.ClassTag
 
-case class ArtistId(key: String) extends Id
-case class ReleaseId(key: String) extends Id
-case class SongId(key: String) extends Id
-
-
-
+case class Id[T: ClassTag](key: String):
+  override def toString: String =
+    val tag = summon[ClassTag[T]]
+    s"Id[${tag.runtimeClass.getSimpleName}](\"$key\")"

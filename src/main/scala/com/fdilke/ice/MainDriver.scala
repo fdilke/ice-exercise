@@ -3,7 +3,7 @@ package com.fdilke.ice
 import com.fdilke.ice.MainDriver.teaBoys
 import com.fdilke.ice.music.domain.{Artist, Release, Song}
 import com.fdilke.ice.music.local.LocalMusicStorageService
-import com.fdilke.ice.music.{ArtistId, MusicDistributionSystem, MusicStorageService, ReleaseId, SongId}
+import com.fdilke.ice.music.{Id, MusicDistributionSystem, MusicStorageService}
 
 object MainDriver extends App:
   println("ICE exercise modelling a Music Distribution System (MDS)")
@@ -13,7 +13,7 @@ object MainDriver extends App:
     new MusicDistributionSystem(storageService)
   println("Instantiated an MDS")
 
-  val teaBoys: ArtistId =
+  val teaBoys: Id[Artist] =
     mds.storeArtist:
       Artist(
         name = "The Clueless Tea Boys",
@@ -22,7 +22,7 @@ object MainDriver extends App:
 
   println(s"added an artist: $teaBoys")
 
-  val oneLump: ReleaseId =
+  val oneLump: Id[Release] =
     mds.storeRelease:
       Release(
         name = "One Lump Or Two?",
@@ -32,7 +32,7 @@ object MainDriver extends App:
 
   println(s"added a release: $oneLump")
 
-  val Seq(teacups, sugarTongs, passTheStrainer): Seq[SongId] =
+  val Seq(teacups, sugarTongs, passTheStrainer): Seq[Id[Song]] =
     Seq("Teacups", "Sugar Tongs", "Pass The Strainer").map: songName =>
       mds.storeSong:
         Song(
