@@ -44,6 +44,9 @@ class LocalMusicStorageService extends MusicStorageService:
   override def getSong(id: Id[Song]): Option[Song] =
     songs.get(id)
 
+  override def getStreaming(id: Id[Streaming]): Option[Streaming] =
+    streamings.get(id)
+  
   override def getRelease(id: Id[Release]): Option[Release] =
     releases.get(id)
 
@@ -67,4 +70,16 @@ class LocalMusicStorageService extends MusicStorageService:
   override def getSongs: Seq[Id[Song]] =
     songs.keys.toSeq
 
-
+  private def songMatchesArtistInStreamableRelease(
+    songId: Id[Song], 
+    artistId: Id[Artist]
+  ): Boolean =
+    releases.values.exists: release =>
+      release.hasSong(songId) &&
+        release.isStreamable
+  
+  override def getStreamings(artistId: Id[Artist]): Seq[Id[Streaming]] =
+    streamings.toSeq.filter: (idStream, stream) =>
+      songMatchesArtistInStreamableRelease(stream.songId, artistId)  
+    .map: (idStream, stream) =>
+      idStream

@@ -33,4 +33,5 @@ trait MusicDistributionSystem:
   def isSongStreamable(songId: Id[Song]): Boolean      
   def getSongs: Seq[Id[Song]]
   def storeStreaming(streaming: Streaming): Id[Streaming]
+  def streamedSongsReport(id: Id[Artist]): String
   

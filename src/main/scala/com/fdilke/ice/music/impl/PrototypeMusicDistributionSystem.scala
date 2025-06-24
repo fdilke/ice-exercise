@@ -105,3 +105,22 @@ class PrototypeMusicDistributionSystem(
   override def getSongs: Seq[Id[Song]] =
     storageService.getSongs
 
+  override def streamedSongsReport(
+    artistId: Id[Artist]
+  ): String =
+    storageService.getStreamings(artistId).map: streamingId =>
+      val streaming: Streaming =
+        storageService.getStreaming(streamingId).getOrElse:
+          throw IllegalArgumentException(s"streaming not found for id $streamingId")
+      val song: Song =
+        storageService.getSong(streaming.songId).getOrElse:
+          throw IllegalArgumentException(s"song not found for id ${streaming.songId}")
+      s"\"${song.name}\"".padTo(30, ' ') +
+        s"${streaming.streamTime}".padTo(12, ' ') +
+        s"${streaming.lengthSeconds}".padTo(5, ' ') +
+        (
+          if streaming.isMonetizable then "£" else "-"
+        )
+    .mkString("\n")
+      
+    

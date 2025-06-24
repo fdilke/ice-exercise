@@ -138,3 +138,8 @@ object MainDriver extends App:
       mds.storeStreaming
   println(s"Recorded streams: ${storedStreams.mkString(",")}")
 
+  println("Streamed songs report:\t(name/date/length/monetizable)\n" +
+    mds.streamedSongsReport(teaBoys)
+  )
+  
+  

@@ -56,7 +56,7 @@ We refer to domain objects by IDs which are just wrapped strings.
 
 The Music Distribution Service wraps other services including a storage service which will be used via
     interfaces. There will be local memory-backed implementations for now.
-    In a full production implementation we would likely use a storage service backed by a database in the cloud.
+    In a full production implementation we would likely use a storage service backed by a database in the cloud, and it would use queries with joins rather than the not too efficient in-memory searches.
 
 For now there is no need to store any data or actually stream anything for the songs ; we just
     record their names and how much was streamed.
@@ -109,6 +109,8 @@ An acceptable trade-off for prototype/demo purposes.
 Later decided this algorithm was unacceptably slow, there is a better (memoizing) one here:
 https://stackoverflow.com/questions/13564464/problems-with-levenshtein-algorithm-in-java
 This gives acceptable results, at least for my small data set.
+(Also found an implementation in the JDK, but in an unofficial extension (?) and wouldn't run.
+There's also one in Apache Commons Text, maybe I should have used that.)
 
 For the prototype, when matching names I'm looping over every song in the database;
 a production version with millions of songs would need to be more sophisticated.
@@ -127,3 +129,36 @@ My example has a fictitious band called The Clueless Tea Boys who have a release
 This just demonstrates that songs are not streamable until they're part of a release
 whose agreed release date has passed.
 
+Many of the APIs can simply be delegated to the MusicStorageService, to such an extent that
+the MusicDistributionSystem implementation is really quite a thin layer. It still seems a
+worthwhile separation. In a production system I'd expect that the MDS would have to wrap
+other services and so would be bulked up from what is currently something of a thin, passthrough
+layer.
+
+The spec seems to indicate that we should keep track of ALL streamings (even short ones)
+    but then only consider monetizable ones (> 30 sec) for reports.
+I'm assuming that each streaming event for an individual song includes a number of seconds,
+which is truncated to an integer. Also that these aren't to be coalesced or accumulated, so
+if you listen to lots of tiny snippets of a song, the artist isn't credited.
+
+I'll assume that when the system is notified of a streaming for a song, the song has been
+released, i.e. is included in a release with an agreed release date lying in the past.
+
+Since we have a concept of payments being requested and made for streamings in a given
+time period (between two dates), we must record the date of each streaming.
+I'm assuming this level of resolution for the streaming time is enough.
+
+For consistency I named all the "store" methods the same way: storeSong(), storeRelease(), etc.
+Briefly considered calling the one for streamings trackStreaming(), to emphasise something
+about the way we record streamings. Consistency seemed better.
+
+As implemented, there is only one ongoing sequence number, so the labelled IDs for different 
+types of domain object will all have different numbers as well as different prefixes across types.
+This was not strictly necessary but seems ok as an additional safeguard that also saves memory.
+
+For a prototype, the "streamed songs report" for an artist can be a CRLF-delimited string.
+I briefly considered returning a more elaborate data structure where you could step through the
+rows, but a simple text report seems adequate for this situation.
+
+I'm interpreting the spec for the report to list all streamed songs for the specified artist,
+    with an indicator whether they're monetizable or not. I used a £ sign to indicate they are, else a dash.
