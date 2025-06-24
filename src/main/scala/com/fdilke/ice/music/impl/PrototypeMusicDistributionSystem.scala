@@ -1,7 +1,7 @@
 package com.fdilke.ice.music.impl
 
 import com.fdilke.ice.music.api.{MusicDistributionSystem, MusicStorageService}
-import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
+import com.fdilke.ice.music.domain.{Artist, Id, Release, Song, Streaming}
 
 import java.time.LocalDate
 
@@ -9,21 +9,27 @@ class PrototypeMusicDistributionSystem(
    storageService: MusicStorageService
 ) extends MusicDistributionSystem:
   override def storeArtist(artist: Artist): Id[Artist] =
-    val id = 
+    val id: Id[Artist] = 
       Id[Artist](storageService.uniqueIdString("artist"))
     storageService.storeArtist(id, artist)
     id
 
   override def storeRelease(release: Release): Id[Release] =
-    val id = 
+    val id: Id[Release] = 
       Id[Release](storageService.uniqueIdString("release"))
     storageService.storeRelease(id, release)
     id
     
   def storeSong(song: Song): Id[Song] =
-    val id = 
+    val id: Id[Song] = 
       Id[Song](storageService.uniqueIdString("song"))
     storageService.storeSong(id, song)
+    id
+
+  override def storeStreaming(streaming: Streaming): Id[Streaming] =
+    val id: Id[Streaming] =
+      Id[Streaming](storageService.uniqueIdString("streaming"))
+    storageService.storeStreaming(id, streaming)
     id
 
   override def withRelease[T](
@@ -47,7 +53,7 @@ class PrototypeMusicDistributionSystem(
         block(song)
       case _ =>
         throw IllegalArgumentException(s"unknown song id $id")
-  
+
   private def updateRelease[T](
     id: Id[Release]
   )(
@@ -86,7 +92,7 @@ class PrototypeMusicDistributionSystem(
 
   override def getSong(id: Id[Song]): Option[Song] =
     storageService.getSong(id)
-    
+
   override def searchReleasedSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
     storageService.searchReleasedSongs(text, maxResults)
 
@@ -95,6 +101,7 @@ class PrototypeMusicDistributionSystem(
 
   override def isSongStreamable(songId: Id[Song]): Boolean =
     storageService.isSongStreamable(songId)
-    
+
   override def getSongs: Seq[Id[Song]] =
     storageService.getSongs
+

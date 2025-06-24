@@ -1,6 +1,6 @@
 package com.fdilke.ice.music.impl
 
-import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
+import com.fdilke.ice.music.domain.{Artist, Id, Release, Song, Streaming}
 import com.fdilke.ice.music.api.MusicStorageService
 import com.fdilke.ice.music.utility.Levenshtein
 
@@ -11,14 +11,20 @@ class LocalMusicStorageService extends MusicStorageService:
   private val sequenceNumber: AtomicLong =
     AtomicLong(0)
 
+  private def blankMap[T]: mutable.Map[Id[T], T] =
+    new mutable.HashMap[Id[T], T]()
+
   private val artists: mutable.Map[Id[Artist], Artist] =
-    new mutable.HashMap[Id[Artist], Artist]()
+    blankMap[Artist]
 
   private val releases: mutable.Map[Id[Release], Release] =
-    new mutable.HashMap[Id[Release], Release]()
+    blankMap[Release]
     
   private val songs: mutable.Map[Id[Song], Song] =
-    new mutable.HashMap[Id[Song], Song]()
+    blankMap[Song]
+
+  private val streamings: mutable.Map[Id[Streaming], Streaming] =
+    blankMap[Streaming]
 
   override def uniqueIdString(prefix: String): String =
     s"$prefix${sequenceNumber.getAndIncrement()}"
@@ -32,6 +38,9 @@ class LocalMusicStorageService extends MusicStorageService:
   override def storeSong(id: Id[Song], song: Song): Unit =
     songs(id) = song
 
+  override def storeStreaming(id: Id[Streaming], streaming: Streaming): Unit =
+    streamings(id) = streaming
+  
   override def getSong(id: Id[Song]): Option[Song] =
     songs.get(id)
 
@@ -57,3 +66,5 @@ class LocalMusicStorageService extends MusicStorageService:
 
   override def getSongs: Seq[Id[Song]] =
     songs.keys.toSeq
+
+

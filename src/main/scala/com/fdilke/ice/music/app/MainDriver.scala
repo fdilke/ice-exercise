@@ -2,7 +2,7 @@ package com.fdilke.ice.music.app
 
 import com.fdilke.ice.music.api.{MusicDistributionSystem, MusicStorageService}
 import com.fdilke.ice.music.app.MainDriver.{afternoonPicnic, teaBoys}
-import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
+import com.fdilke.ice.music.domain.{Artist, Id, Release, Song, Streaming}
 import com.fdilke.ice.music.impl.{LocalMusicStorageService, PrototypeMusicDistributionSystem}
 
 import java.time.LocalDate
@@ -124,3 +124,17 @@ object MainDriver extends App:
       s"\t${song.lengthSeconds.toString.padTo(10, ' ')}" +
       s"$distance"
     )
+
+  println("Recording some streaming of released songs")
+  val storedStreams: Seq[Id[Streaming]] =
+    Seq(
+      Streaming(teacups, 3, LocalDate.of(2024, 8, 3)),
+      Streaming(passTheStrainer, 70, LocalDate.of(2024, 8, 4)),
+      Streaming(passTheStrainer, 7, LocalDate.of(2024, 8, 5)),
+      Streaming(madeira, 27, LocalDate.of(2024, 8, 6)),
+      Streaming(oneLumpSong, 120, LocalDate.of(2024, 8, 7)),
+      Streaming(passTheStrainer, 75, LocalDate.of(2024, 8, 8))
+    ).map:
+      mds.storeStreaming
+  println(s"Recorded streams: ${storedStreams.mkString(",")}")
+

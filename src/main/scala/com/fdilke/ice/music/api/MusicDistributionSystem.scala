@@ -1,6 +1,6 @@
 package com.fdilke.ice.music.api
 
-import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
+import com.fdilke.ice.music.domain._
 
 import java.time.LocalDate
 
@@ -32,3 +32,5 @@ trait MusicDistributionSystem:
   def getReleases: Seq[Id[Release]]
   def isSongStreamable(songId: Id[Song]): Boolean      
   def getSongs: Seq[Id[Song]]
+  def storeStreaming(streaming: Streaming): Id[Streaming]
+  
