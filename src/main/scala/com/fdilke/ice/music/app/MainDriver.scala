@@ -36,8 +36,8 @@ object MainDriver extends App:
 
   val Seq(teacups, sugarTongs, passTheStrainer): Seq[Id[Song]] =
     Seq(
-      Song("Teacups", 120), 
-      Song("Sugar Tongs", 240), 
+      Song("Teacups", 120),
+      Song("Sugar Tongs", 240),
       Song("Pass The Strainer", 300)
     ).map:
       mds.storeSong
@@ -74,7 +74,7 @@ object MainDriver extends App:
 
   val Seq(crumpets, crumpetsDisco): Seq[Id[Song]] =
     Seq(
-      Song("Crumpets", 160), 
+      Song("Crumpets", 160),
       Song("Crumpets (Disco Remix)", 220)
     ).map:
       mds.storeSong
@@ -87,8 +87,10 @@ object MainDriver extends App:
   for
     (songId, distance) <- mds.searchSongs("Crumpets", 3)
   do
-    val song: Song = 
+    val song: Song =
       mds.getSong(songId).getOrElse:
         throw IllegalArgumentException("song not found")
-    println(s"- \"${song.name}\"\t${song.lengthSeconds}\t\t$distance")
-    
+    println(
+      s"- \"${song.name}\"".padTo(20, ' ') +
+      s"\t${song.lengthSeconds.toString.padTo(10, ' ')}" +
+      s"$distance")
