@@ -113,7 +113,7 @@ This gives acceptable results, at least for my small data set.
 For the prototype, when matching names I'm looping over every song in the database;
 a production version with millions of songs would need to be more sophisticated.
 Perhaps a trie tree or some other data structure would enable a more efficient search.
-Alternatively, maybe the database understands Levenshtien natively (built into the query language)
+Alternatively, maybe the database understands Levenshtein natively (built into the query language)
 or one could write a PL/SQL method to calculate it.
 
 Ideally the search would provide a maximum number of songs (e.g. "only return 20").

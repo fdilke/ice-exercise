@@ -47,7 +47,7 @@ object MainDriver extends App:
   println(s"added songs: $teacups, $sugarTongs, $passTheStrainer to the release")
 
   val proposedReleaseDate: LocalDate =
-    LocalDate.of(2025, 8, 2)
+    LocalDate.of(2024, 8, 2)
   mds.proposeReleaseDate(oneLump, proposedReleaseDate)
 
   println(s"Proposed a release date for $oneLump of $proposedReleaseDate")
@@ -83,7 +83,19 @@ object MainDriver extends App:
 
   println(s"added songs $crumpets, $crumpetsDisco to $afternoonPicnic")
 
-  println(s"searching on \"Crumpets\", results:")
+  println(s"list of releases, streamable or not:")
+  for
+    releaseId <- mds.getReleases
+  do
+    mds.withRelease(releaseId): release =>
+      println(
+        s"- \"${release.name}\"".padTo(30, ' ') +
+        (
+          if release.isStreamable then "YES" else "NO"
+        )
+      )
+
+  println(s"searching on \"Crumpets\", results (name/length/distance):")
   for
     (songId, distance) <- mds.searchSongs("Crumpets", 3)
   do

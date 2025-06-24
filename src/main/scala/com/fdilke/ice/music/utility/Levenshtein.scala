@@ -1,7 +1,5 @@
 package com.fdilke.ice.music.utility
 
-import jdk.internal.org.jline.utils.Levenshtein.distance
-
 object Levenshtein:
   // initial algorithm, too slow
   def distanceOld(x: String, y: String): Int =

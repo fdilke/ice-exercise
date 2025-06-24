@@ -45,3 +45,6 @@ class LocalMusicStorageService extends MusicStorageService:
       distance
     .take(maxResults)
 
+  def getReleases: Seq[Id[Release]] =
+    releases.keys.toSeq
+

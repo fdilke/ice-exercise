@@ -10,4 +10,7 @@ case class Release(
   proposedReleaseDate: Option[LocalDate] = None,
   agreedReleaseDate: Option[LocalDate] = None,
   songs: Seq[Id[Song]] = Seq()
-)
+):
+  def isStreamable: Boolean =
+    agreedReleaseDate.exists:
+      LocalDate.now().isAfter

@@ -78,3 +78,7 @@ class PrototypeMusicDistributionSystem(
     
   override def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
     storageService.searchSongs(text, maxResults)
+
+  override def getReleases: Seq[Id[Release]] =
+    storageService.getReleases
+    
