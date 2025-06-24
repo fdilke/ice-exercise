@@ -78,3 +78,52 @@ added a convenience method so you can store multiple songs in a release
 
 We'll store the list of song ids in the data for a release
     again these are likely to map to foreign keys
+
+Refactored to use a class Id[<CLASS>] to tag the IDs, so we can type-safely have
+Id[Song] etc without repeating any code.
+
+Refactored to use withRelease(), updateRelease(). May use this pattern with the other types.
+The repetition here could be eliminated, at the cost of some type trickery,
+but for now it doesn't seem worth it.
+
+A release can have an optional proposed release date, and an agreed release date.
+The intention is that at most one of these is defined, but that isn't enforced.
+For simplicity I'm storing dates (such as proposed release dates) as LocalDate, so for the purposes of this
+exercise I'm glossing over the management of timezones, or just assuming that all dates are
+rendered locally to wherever they are being processed. This would need to be more sophisticated
+for a production app operating globally.
+
+The utility method withRelease() was initially private, but I later exposed it as part of the official API
+    as it was useful at the top level.
+At this point it seemed worth separating out the interface and implementation for MusicDistributionService.
+
+Rather than implement my own Levenshtien distance algorithm from scratch, I sought inspiration from here:
+https://blog.tmorris.net/posts/finding-the-levenshtein-distance-in-scala/
+But that seems to use an old version of Scalaz and was not documented well enough for me to be
+able to figure it out :(
+The TonyM algo also did not win my confidence by apparently memoizing a function taking memos as an argument.
+I found this Java code which was easier to adapt:
+https://www.baeldung.com/java-levenshtein-distance#:~:text=In%20this%20article,%20we%20describe%20the%20Levenshtein
+This works, but seems somewhat less efficient as it doesn't memoize anything.
+An acceptable trade-off for prototype/demo purposes.
+Later decided this algorithm was unacceptably slow, there is a better (memoizing) one here:
+https://stackoverflow.com/questions/13564464/problems-with-levenshtein-algorithm-in-java
+This gives acceptable results, at least for my small data set.
+
+For the prototype, when matching names I'm looping over every song in the database;
+a production version with millions of songs would need to be more sophisticated.
+Perhaps a trie tree or some other data structure would enable a more efficient search.
+Alternatively, maybe the database understands Levenshtien natively (built into the query language)
+or one could write a PL/SQL method to calculate it.
+
+Ideally the search would provide a maximum number of songs (e.g. "only return 20").
+Implement this even though my example has a rather small back catalogue of songs (5).
+Arguably one should make the distance calculation case-insensitive ; I didn't.
+Also note that Levenshtein distance on its own might not be the best calculation ;
+    a search for "Crumpets" didn't match very well with "Crumpets (Disco Remix)".
+
+My example has a fictitious band called The Clueless Tea Boys who have a released album
+"One Lump or Two?" and an unreleased EP called "Crumpets", with a total of 5 songs.
+This just demonstrates that songs are not streamable until they're part of a release
+whose agreed release date has passed.
+
