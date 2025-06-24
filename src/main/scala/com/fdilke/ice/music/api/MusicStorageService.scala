@@ -10,6 +10,7 @@ trait MusicStorageService:
   
   def getRelease(id: Id[Release]): Option[Release]
   def getSong(id: Id[Song]): Option[Song]
-  def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)]
+  def searchReleasedSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)]
   def getReleases: Seq[Id[Release]]
-
+  def isSongStreamable(songId: Id[Song]): Boolean
+  def getSongs: Seq[Id[Song]]

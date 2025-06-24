@@ -34,15 +34,19 @@ object MainDriver extends App:
 
   println(s"added a release: $oneLump")
 
-  val Seq(teacups, sugarTongs, passTheStrainer): Seq[Id[Song]] =
+  val Seq(teacups, sugarTongs, passTheStrainer, biscuits, madeira, oneLumpSong, madAbout): Seq[Id[Song]] =
     Seq(
       Song("Teacups", 120),
       Song("Sugar Tongs", 240),
-      Song("Pass The Strainer", 300)
+      Song("Pass The Strainer", 300),
+      Song("Bath Oliver Biscuits", 360),
+      Song("Madeira Cake", 600),
+      Song("One Lump Or Two?", 420),
+      Song("Mad About the Teapot", 280)
     ).map:
       mds.storeSong
 
-  mds.addSongsToRelease(oneLump, teacups, sugarTongs, passTheStrainer)
+  mds.addSongsToRelease(oneLump, teacups, sugarTongs, passTheStrainer, biscuits, madeira, oneLumpSong, madAbout)
 
   println(s"added songs: $teacups, $sugarTongs, $passTheStrainer to the release")
 
@@ -52,15 +56,13 @@ object MainDriver extends App:
 
   println(s"Proposed a release date for $oneLump of $proposedReleaseDate")
 
-  {
-    mds.withRelease(oneLump): r =>
-      assert:
-        r.proposedReleaseDate.isDefined
-      assert:
-        r.proposedReleaseDate.get == proposedReleaseDate
-    mds.agreeReleaseDate(oneLump)
-    println(s"Agreed release date for $oneLump")
-  }
+  mds.withRelease(oneLump): r =>
+    assert:
+      r.proposedReleaseDate.isDefined
+    assert:
+      r.proposedReleaseDate.get == proposedReleaseDate
+  mds.agreeReleaseDate(oneLump)
+  println(s"Agreed release date for $oneLump")
 
   val afternoonPicnic: Id[Release] =
     mds.storeRelease:
@@ -95,9 +97,24 @@ object MainDriver extends App:
         )
       )
 
-  println(s"searching on \"Crumpets\", results (name/length/distance):")
+  println(s"list of songs/lengths, streamable or not:")
   for
-    (songId, distance) <- mds.searchSongs("Crumpets", 3)
+    songId <- mds.getSongs
+  do
+    mds.withSong(songId): song =>
+      println(
+        s"- \"${song.name}\"".padTo(30, ' ') +
+        s"\t${song.lengthSeconds.toString.padTo(10, ' ')}" +
+          (
+            if mds.isSongStreamable(songId) then "YES" else "NO"
+          )
+      )
+
+  val searchTerm: String =
+    "Madeira"
+  println(s"searching on \"$searchTerm\", results (name/length/distance):")
+  for
+    (songId, distance) <- mds.searchReleasedSongs(searchTerm, 3)
   do
     val song: Song =
       mds.getSong(songId).getOrElse:
@@ -105,4 +122,5 @@ object MainDriver extends App:
     println(
       s"- \"${song.name}\"".padTo(20, ' ') +
       s"\t${song.lengthSeconds.toString.padTo(10, ' ')}" +
-      s"$distance")
+      s"$distance"
+    )

@@ -13,6 +13,11 @@ trait MusicDistributionSystem:
   )(
     block: Release => T
   ): T
+  def withSong[T](
+    id: Id[Song]
+  )(
+    block: Song => T
+  ): T
   def addSongsToRelease(
     id: Id[Release], 
     songs: Id[Song]*
@@ -22,8 +27,8 @@ trait MusicDistributionSystem:
     date: LocalDate
   ): Unit
   def agreeReleaseDate(id: Id[Release]): Unit
-  def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)]
+  def searchReleasedSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)]
   def getSong(id: Id[Song]): Option[Song]
   def getReleases: Seq[Id[Release]]
-      
-
+  def isSongStreamable(songId: Id[Song]): Boolean      
+  def getSongs: Seq[Id[Song]]

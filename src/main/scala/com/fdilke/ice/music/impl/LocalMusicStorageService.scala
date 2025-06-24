@@ -38,8 +38,10 @@ class LocalMusicStorageService extends MusicStorageService:
   override def getRelease(id: Id[Release]): Option[Release] =
     releases.get(id)
 
-  override def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
-    songs.toSeq.map: (songId, song) =>
+  override def searchReleasedSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
+    songs.toSeq.filter: (songId, song) =>
+      isSongStreamable(songId)
+    .map: (songId, song) =>
       songId -> Levenshtein.distance(text, song.name)
     .sortBy: (songId, distance) =>
       distance
@@ -48,3 +50,10 @@ class LocalMusicStorageService extends MusicStorageService:
   def getReleases: Seq[Id[Release]] =
     releases.keys.toSeq
 
+  override def isSongStreamable(songId: Id[Song]): Boolean =
+    releases.values.exists: release =>
+      release.isStreamable &&
+        release.hasSong(songId)
+
+  override def getSongs: Seq[Id[Song]] =
+    songs.keys.toSeq

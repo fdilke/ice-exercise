@@ -14,3 +14,6 @@ case class Release(
   def isStreamable: Boolean =
     agreedReleaseDate.exists:
       LocalDate.now().isAfter
+
+  def hasSong(songId: Id[Song]): Boolean =
+    songs.contains(songId)

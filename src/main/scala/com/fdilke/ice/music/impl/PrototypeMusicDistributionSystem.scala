@@ -37,6 +37,17 @@ class PrototypeMusicDistributionSystem(
       case _ =>
         throw IllegalArgumentException(s"unknown release id $id")
 
+  override def withSong[T](
+   id: Id[Song]
+  )(
+    block: Song => T
+  ): T =
+    storageService.getSong(id) match
+      case Some(song) =>
+        block(song)
+      case _ =>
+        throw IllegalArgumentException(s"unknown song id $id")
+  
   private def updateRelease[T](
     id: Id[Release]
   )(
@@ -76,9 +87,14 @@ class PrototypeMusicDistributionSystem(
   override def getSong(id: Id[Song]): Option[Song] =
     storageService.getSong(id)
     
-  override def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
-    storageService.searchSongs(text, maxResults)
+  override def searchReleasedSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
+    storageService.searchReleasedSongs(text, maxResults)
 
   override def getReleases: Seq[Id[Release]] =
     storageService.getReleases
+
+  override def isSongStreamable(songId: Id[Song]): Boolean =
+    storageService.isSongStreamable(songId)
     
+  override def getSongs: Seq[Id[Song]] =
+    storageService.getSongs
