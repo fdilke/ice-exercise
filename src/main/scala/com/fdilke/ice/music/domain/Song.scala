@@ -1,5 +1,6 @@
 package com.fdilke.ice.music.domain
 
 case class Song(
-  name: String               
+  name: String,
+  lengthSeconds: Int             
 )

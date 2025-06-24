@@ -9,4 +9,6 @@ trait MusicStorageService:
   def storeSong(id: Id[Song], song: Song): Unit
   
   def getRelease(id: Id[Release]): Option[Release]
+  def getSong(id: Id[Song]): Option[Song]
+  def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)]
 

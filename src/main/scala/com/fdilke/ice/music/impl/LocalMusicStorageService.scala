@@ -2,6 +2,7 @@ package com.fdilke.ice.music.impl
 
 import com.fdilke.ice.music.domain.{Artist, Id, Release, Song}
 import com.fdilke.ice.music.api.MusicStorageService
+import com.fdilke.ice.music.utility.Levenshtein
 
 import java.util.concurrent.atomic.AtomicLong
 import scala.collection.mutable
@@ -31,5 +32,16 @@ class LocalMusicStorageService extends MusicStorageService:
   override def storeSong(id: Id[Song], song: Song): Unit =
     songs(id) = song
 
+  override def getSong(id: Id[Song]): Option[Song] =
+    songs.get(id)
+
   override def getRelease(id: Id[Release]): Option[Release] =
     releases.get(id)
+
+  override def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
+    songs.toSeq.map: (songId, song) =>
+      songId -> Levenshtein.distance(text, song.name)
+    .sortBy: (songId, distance) =>
+      distance
+    .take(maxResults)
+

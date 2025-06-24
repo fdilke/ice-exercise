@@ -72,4 +72,9 @@ class PrototypeMusicDistributionSystem(
         proposedReleaseDate = None,
         agreedReleaseDate = release.proposedReleaseDate
       )
-      
+
+  override def getSong(id: Id[Song]): Option[Song] =
+    storageService.getSong(id)
+    
+  override def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
+    storageService.searchSongs(text, maxResults)

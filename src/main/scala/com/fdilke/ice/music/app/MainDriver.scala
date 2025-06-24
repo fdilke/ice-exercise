@@ -34,15 +34,13 @@ object MainDriver extends App:
 
   println(s"added a release: $oneLump")
 
-  def storeNamedSong(songName: String): Id[Song] =
-    mds.storeSong:
-      Song(
-        name = songName
-      )
-
   val Seq(teacups, sugarTongs, passTheStrainer): Seq[Id[Song]] =
-    Seq("Teacups", "Sugar Tongs", "Pass The Strainer").map:
-      storeNamedSong
+    Seq(
+      Song("Teacups", 120), 
+      Song("Sugar Tongs", 240), 
+      Song("Pass The Strainer", 300)
+    ).map:
+      mds.storeSong
 
   mds.addSongsToRelease(oneLump, teacups, sugarTongs, passTheStrainer)
 
@@ -75,10 +73,22 @@ object MainDriver extends App:
   println(s"added a release: $afternoonPicnic")
 
   val Seq(crumpets, crumpetsDisco): Seq[Id[Song]] =
-    Seq("Crumpets", "Crumpets (Disco Remix)").map:
-      storeNamedSong
+    Seq(
+      Song("Crumpets", 160), 
+      Song("Crumpets (Disco Remix)", 220)
+    ).map:
+      mds.storeSong
 
   mds.addSongsToRelease(oneLump, teacups, sugarTongs, passTheStrainer)
 
   println(s"added songs $crumpets, $crumpetsDisco to $afternoonPicnic")
 
+  println(s"searching on \"Crumpets\", results:")
+  for
+    (songId, distance) <- mds.searchSongs("Crumpets", 3)
+  do
+    val song: Song = 
+      mds.getSong(songId).getOrElse:
+        throw IllegalArgumentException("song not found")
+    println(s"- \"${song.name}\"\t${song.lengthSeconds}\t\t$distance")
+    

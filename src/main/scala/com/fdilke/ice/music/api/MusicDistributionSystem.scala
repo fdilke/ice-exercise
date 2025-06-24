@@ -22,5 +22,7 @@ trait MusicDistributionSystem:
     date: LocalDate
   ): Unit
   def agreeReleaseDate(id: Id[Release]): Unit
+  def searchSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)]
+  def getSong(id: Id[Song]): Option[Song]
       
 
