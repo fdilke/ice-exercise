@@ -167,3 +167,8 @@ class PrototypeMusicDistributionSystem(
       artist.copy(
         paymentDates = artist.paymentDates :+ date
       )
+  def takeReleaseOutOfDistribution(id: Id[Release]): Unit =
+    updateRelease(id): release =>
+      release.copy(
+        inDistribution = false
+      )

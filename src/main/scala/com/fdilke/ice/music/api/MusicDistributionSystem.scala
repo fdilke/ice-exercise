@@ -46,4 +46,4 @@ trait MusicDistributionSystem:
   def streamedSongsReport(id: Id[Artist]): String
   def requestArtistPayment(artistId: Id[Artist], date: LocalDate): Unit
   def recordArtistPayment(artistId: Id[Artist], date: LocalDate): Unit
-  
+  def takeReleaseOutOfDistribution(id: Id[Release]): Unit   

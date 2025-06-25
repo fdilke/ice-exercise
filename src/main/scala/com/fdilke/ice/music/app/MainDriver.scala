@@ -97,19 +97,21 @@ object MainDriver extends App:
         )
       )
 
-  println(s"list of songs/lengths, streamable or not:")
-  for
-    songId <- mds.getSongs
-  do
-    mds.withSong(songId): song =>
-      println(
-        s"- \"${song.name}\"".padTo(30, ' ') +
-        s"\t${song.lengthSeconds.toString.padTo(10, ' ')}" +
-          (
-            if mds.isSongStreamable(songId) then "YES" else "NO"
-          )
-      )
+  def showSongs(): Unit =
+    println(s"list of songs/lengths, streamable or not:")
+    for
+      songId <- mds.getSongs
+    do
+      mds.withSong(songId): song =>
+        println(
+          s"- \"${song.name}\"".padTo(30, ' ') +
+          s"\t${song.lengthSeconds.toString.padTo(10, ' ')}" +
+            (
+              if mds.isSongStreamable(songId) then "YES" else "NO"
+            )
+        )
 
+  showSongs()
   val searchTerm: String =
     "Madeira"
   println(s"searching on \"$searchTerm\", results (name/length/distance):")
@@ -150,4 +152,10 @@ object MainDriver extends App:
   mds.withArtist(teaBoys): artist =>
     println(s"artist data: $artist")
 
+  println("Updated streamed songs report:\t(name/date/length/monetizable)\n" +
+    mds.streamedSongsReport(teaBoys)
+  )
   
+  println("taking release out of distribution, updated report of available songs:")
+  mds.takeReleaseOutOfDistribution(oneLump)
+  showSongs()

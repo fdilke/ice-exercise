@@ -162,6 +162,10 @@ rows, but a simple text report seems adequate for this situation.
 
 I'm interpreting the spec for the report to list all streamed songs for the specified artist,
     with an indicator whether they're monetizable or not. I used a £ sign to indicate they are, else a dash.
+I include all songs in the report which appear in a release for the specified artist.
+In a production system, possibly some extra logic should be added here to take account of
+releases which are removed or not yet confirmed for release. It's possible also that a song
+could be included in releases for multiple artists.
 
 On filing for payment, there is a requirement for the artist to be able to request this. 
 So I'll add to the Artist data:
@@ -176,3 +180,6 @@ which could be refactored to eliminate repetition but at the cost of some typed 
 For consistency, I've made all the with() methods public APIs and the update() methods private,
 but not add update( methods) unless they're needed in a behaviour.
 
+When a release is removed from distribution, then rather than remove it from the storage service,
+I set an additional flag so that it is not considered streamable and won't appear in searches.
+This makes the process reversible and ensures compatibility with other APIs such as the streaming report.
