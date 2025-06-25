@@ -50,6 +50,9 @@ class LocalMusicStorageService extends MusicStorageService:
   override def getRelease(id: Id[Release]): Option[Release] =
     releases.get(id)
 
+  override def getArtist(id: Id[Artist]): Option[Artist] =
+    artists.get(id)
+      
   override def searchReleasedSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)] =
     songs.toSeq.filter: (songId, song) =>
       isSongStreamable(songId)

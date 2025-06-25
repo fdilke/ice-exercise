@@ -54,6 +54,39 @@ class PrototypeMusicDistributionSystem(
       case _ =>
         throw IllegalArgumentException(s"unknown song id $id")
 
+  override def withArtist[T](
+   id: Id[Artist]
+  )(
+    block: Artist => T
+  ): T =
+    storageService.getArtist(id) match
+      case Some(artist) =>
+        block(artist)
+      case _ =>
+        throw IllegalArgumentException(s"unknown artist id $id")
+
+  override def withStreaming[T](
+    id: Id[Streaming]
+  )(
+    block: Streaming => T
+  ): T =
+    storageService.getStreaming(id) match
+      case Some(streaming) =>
+        block(streaming)
+      case _ =>
+        throw IllegalArgumentException(s"unknown streaming id $id")
+
+  private def updateArtist[T](
+    id: Id[Artist]
+  )(
+    updateFn: Artist => Artist
+  ): Unit =
+    withArtist(id): artist =>
+      storageService.storeArtist(
+        id,
+        updateFn(artist)
+      )
+
   private def updateRelease[T](
     id: Id[Release]
   )(
@@ -122,5 +155,15 @@ class PrototypeMusicDistributionSystem(
           if streaming.isMonetizable then "£" else "-"
         )
     .mkString("\n")
-      
-    
+
+  def requestArtistPayment(artistId: Id[Artist], date: LocalDate): Unit =
+    updateArtist(artistId): artist =>
+      artist.copy(
+        paymentRequestDates = artist.paymentRequestDates :+ date
+      )
+
+  def recordArtistPayment(artistId: Id[Artist], date: LocalDate): Unit =
+    updateArtist(artistId): artist =>
+      artist.copy(
+        paymentDates = artist.paymentDates :+ date
+      )

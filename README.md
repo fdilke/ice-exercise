@@ -132,8 +132,8 @@ whose agreed release date has passed.
 Many of the APIs can simply be delegated to the MusicStorageService, to such an extent that
 the MusicDistributionSystem implementation is really quite a thin layer. It still seems a
 worthwhile separation. In a production system I'd expect that the MDS would have to wrap
-other services and so would be bulked up from what is currently something of a thin, passthrough
-layer.
+other services (e.g. payment gateways) and so would be bulked up from what is currently
+something of a thin passthrough layer.
 
 The spec seems to indicate that we should keep track of ALL streamings (even short ones)
     but then only consider monetizable ones (> 30 sec) for reports.
@@ -162,3 +162,17 @@ rows, but a simple text report seems adequate for this situation.
 
 I'm interpreting the spec for the report to list all streamed songs for the specified artist,
     with an indicator whether they're monetizable or not. I used a £ sign to indicate they are, else a dash.
+
+On filing for payment, there is a requirement for the artist to be able to request this. 
+So I'll add to the Artist data:
+- a list of payment requests, with dates
+- a list of dates when payments were made
+and also add (although it's not explicitly requested) an API for the record company to update
+    these when they make a payment.
+Seems likely that this audit record would be of interest to both parties.
+
+There's a certain uniformity in the withArtist(), withRelease(), updateRelease(), etc methods,
+which could be refactored to eliminate repetition but at the cost of some typed functional trickery.
+For consistency, I've made all the with() methods public APIs and the update() methods private,
+but not add update( methods) unless they're needed in a behaviour.
+

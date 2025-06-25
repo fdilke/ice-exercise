@@ -18,6 +18,16 @@ trait MusicDistributionSystem:
   )(
     block: Song => T
   ): T
+  def withArtist[T](
+   id: Id[Artist]
+  )(
+   block: Artist => T
+  ): T  
+  def withStreaming[T](
+   id: Id[Streaming]
+  )(
+   block: Streaming => T
+  ): T  
   def addSongsToRelease(
     id: Id[Release], 
     songs: Id[Song]*
@@ -34,4 +44,6 @@ trait MusicDistributionSystem:
   def getSongs: Seq[Id[Song]]
   def storeStreaming(streaming: Streaming): Id[Streaming]
   def streamedSongsReport(id: Id[Artist]): String
+  def requestArtistPayment(artistId: Id[Artist], date: LocalDate): Unit
+  def recordArtistPayment(artistId: Id[Artist], date: LocalDate): Unit
   

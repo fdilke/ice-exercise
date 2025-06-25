@@ -141,5 +141,13 @@ object MainDriver extends App:
   println("Streamed songs report:\t(name/date/length/monetizable)\n" +
     mds.streamedSongsReport(teaBoys)
   )
-  
+
+  println("Requesting payment on behalf of the artist")
+  mds.requestArtistPayment(teaBoys, LocalDate.of(2024, 8, 7))
+  println("Recording payment on behalf of the record company")
+  mds.recordArtistPayment(teaBoys, LocalDate.of(2024, 8, 8))
+
+  mds.withArtist(teaBoys): artist =>
+    println(s"artist data: $artist")
+
   

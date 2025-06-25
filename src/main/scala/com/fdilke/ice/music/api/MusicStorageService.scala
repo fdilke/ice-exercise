@@ -2,6 +2,8 @@ package com.fdilke.ice.music.api
 
 import com.fdilke.ice.music.domain.{Artist, Id, Release, Song, Streaming}
 
+import java.time.LocalDate
+
 trait MusicStorageService:
   def uniqueIdString(prefix: String): String
   def storeArtist(id: Id[Artist], artist: Artist): Unit
@@ -11,6 +13,7 @@ trait MusicStorageService:
   
   def getRelease(id: Id[Release]): Option[Release]
   def getSong(id: Id[Song]): Option[Song]
+  def getArtist(id: Id[Artist]): Option[Artist]
   def getStreaming(id: Id[Streaming]): Option[Streaming]
   def searchReleasedSongs(text: String, maxResults: Int): Seq[(Id[Song], Int)]
   def getReleases: Seq[Id[Release]]
