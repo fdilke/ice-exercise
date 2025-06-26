@@ -67,7 +67,7 @@ From analysing the requirements, I extracted these business domain objects:
         If <= 30sec, it doesn't count towards monetization, but is still recorded for reporting purposes.
 
     Release: an ordered collection of songs. Typically an EP or album.
-        A release can be renmoved from distribution.
+        A release can be removed from distribution.
 
 These are all modelled as discrete value objects and held in local storage.
 
@@ -134,8 +134,8 @@ The intention is that a database would store all of these IDs in its tables as
 foreign keys.
 
 It's also possible the database is sharded across multiple locations
-and only provides eventual consistency, rather than being entirely locally consistent
-during all transactions.
+and only provides eventual consistency, rather than being entirely 
+locally consistent during all transactions.
 
 ---
 
@@ -144,7 +144,7 @@ during all transactions.
 With this architecture in place, the main driver program instantiates and manipulates
 domain objects, referred to by their IDs, using the specified behaviours.
 
-It registers an artist, a fictiitous band called The Clueless Tea Boys, then
+It registers an artist, a fictitious band called The Clueless Tea Boys, then
 registers two releases for them, an EP and an album, and populates these
 with songs.
 
@@ -242,10 +242,10 @@ requested and made.
 
 # Assumptions: songs
 
-For now there is no need to store any data or actually stream anything 
+For now there is no need to store any music or actually stream anything 
 for the songs. We just record their names and how much was streamed.
 
-In production the songs would be stored in the storage service which
+In production, the songs would be stored in the storage service, which
 would also be responsible for streaming them.
 
 I'll assume that when the system is notified of a streaming for a song,
@@ -266,8 +266,8 @@ could appear as part of multiple releases for multiple artists.
 We'll store the list of song ids in the data for a release.
 They are in a specified order, as for a CD.
 
-There is no provision for separating batches of songs within a release,
-as might be useful for sides of an LP, or for naming blocks of songs.
+There is no provision for separating blocks of songs within a release,
+as might be useful for sides of an LP, or for naming composite pieces.
 
 ---
 
@@ -288,8 +288,8 @@ For each streaming, we record the song and how long it was played for.
 We won't record anything about the users.
 
 The spec seems to indicate that we should keep track of ALL streamings
-(even short ones) but then only consider monetizable ones (> 30 sec)
-for reports.
+(even short ones) and indicate the monetizable ones (> 30 sec)
+in the reports.
 
 I'm assuming that each streaming event for an individual song includes a
 number of seconds, which is truncated to an integer.
@@ -308,9 +308,9 @@ matches a given text pattern, ordered by Levenshtein distance.
 
 # Assumptions: payments
 
-Since we have a concept of payments being requested and made for streamings
-in a given time period (between two dates), we must record the date of
-each streaming.
+Since we have a concept of payments being requested and made for
+streamings in a given time period (between two dates), we must
+record the date of each streaming.
 
 I'm assuming this level of resolution for the streaming time is enough.
 
@@ -343,10 +343,10 @@ It's possible also that a song could be included in releases for multiple artist
 A release can have an optional proposed release date, and an agreed release date.
 The intention is that at most one of these is defined, but that isn't enforced.
 
-For simplicity I'm storing dates (such as proposed release dates) as LocalDate,
-so for the purposes of this exercise I'm glossing over the management of timezones,
-or just assuming that all dates are rendered locally to wherever they are
-being processed.
+For simplicity I'm storing dates (such as proposed release dates) as _LocalDate_,
+so for the purposes of this exercise I'm glossing over the management of
+timezones, or just assuming that all dates are rendered locally to
+wherever they are being processed.
 
 For a production app operating globally, this would need to be more sophisticated.
 
@@ -354,7 +354,7 @@ For a production app operating globally, this would need to be more sophisticate
 
 # Additional code details
 
-In the API I use withRelease(), updateRelease().
+In the API I include convenient methods withRelease(), updateRelease(), etc.
 The repetition here could be eliminated, at the cost of some additional
 complexity and type trickery. For now, it doesn't seem worth it.
 
@@ -374,8 +374,8 @@ Consistency seemed better.
 Many of the APIs can simply be delegated to the MusicStorageService,
 to such an extent that the MusicDistributionSystem implementation is
 really quite a thin layer. It still seems a worthwhile separation.
-In a production system I'd expect that the MDS would have to wrap
-other services such as payment gateways.
+In a production system I'd expect that the MDS would need to include
+further interactions with other services such as payment gateways.
 
 I use a class _Id[<CLASS>]_ to tag the IDs, so we can type-safely have
 _Id[Song]_ etc without repeating any code.

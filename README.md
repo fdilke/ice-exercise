@@ -32,16 +32,12 @@ Release: an ordered collection of songs. Typically an EP or album.
 
     The lifecycle of a release is that a release data is proposed and agreed, after which the songs
     become streamable. Songs can be added or removed. The system keeps track of which songs have been streamed.
-    A release can be renmoved from distribution.
-
-    There is no provision for separating batches of songs within a release,
-    as might be necessary for sides of an LP.
+    A release can be removed from distribution which essentially returns it to a state where there is no
+    proposed (re-)release date.
 
 Streaming: an instance of somebody listening to all or part of a song. If <= 30sec, it doesn't count towards monetization, but is still recorded for reporting purposes.
 
-These concepts are important, but not modelled as discrete value objects:
-
-Report: a list of streamed songs.
+Report: an list of streamed songs.
 
 File for payment: an artist recording a request to be paid for the songs played since the last payment date.
 
